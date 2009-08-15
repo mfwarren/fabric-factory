@@ -16,7 +16,7 @@ def main():
                       "--action",
                       dest="action",
                       help="Action can be : start|stop|restart",
-                      default="start"
+                      default=""
                       )    
     parser.add_option("-k",
                       "--kitchen",
@@ -52,6 +52,19 @@ def main():
         worker_daemon.stop()
     elif options.action == "restart":
         worker_daemon.restart()
+    else:
+        worker = worker_factory(factory_url=options.factory_url,
+                       kitchen_path=options.kitchen)
+        if worker is not None:
+            logging.debug("worker download the build package")
+            worker.download_build_package()
+            logging.debug("Worker execute the task")
+            worker.execute_task()
+            logging.debug("Worker post the result")
+            worker.post_result()
+            if not options.keep_builds:
+                logging.debug("Worker clean the kitchen after the build")
+                worker.clean()
     
 
 
@@ -68,6 +81,7 @@ def worker_factory(factory_url, kitchen_path):
         return worker
     else:
         return None
+
     
 class WorkerDaemon(daemon.Daemon):
     def run(self, options):

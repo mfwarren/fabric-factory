@@ -22,6 +22,8 @@ class Worker(object):
         self.revision = None
         self.output = None
     def download_build_package(self):
+        if not os.path.isdir(self.kitchen_path):
+            os.mkdir(self.kitchen_path)
         web_file = urllib2.urlopen(self.build_package_url)
         self.filename = self.build_package_url.split('/')[-1]
         local_tar_file = open(os.path.join(self.kitchen_path, self.filename), 'w')

@@ -5,7 +5,7 @@ PROJECT_PATH = os.path.dirname(os.path.normpath(__file__))
 PROJECT_ROOT = os.path.normpath(PROJECT_PATH + '/..')
 
 BUILD_PATH = os.path.join(PROJECT_PATH, 'media/build_packages')
-BUILD_URL = "/site_media/build_package"
+BUILD_URL = "/site_media/build_packages"
 
 
 DEBUG = True
