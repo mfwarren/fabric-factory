@@ -36,11 +36,14 @@ class Build(models.Model):
         the targeted tasks from the fabfile.
         """
         
-        try:
+        # Check if BUILD_PATH exist if it doesn't create it
+        if not os.path.isdir(settings.BUILD_PATH):
+            os.mkdir(settings.BUILD_PATH)
         # Make a tar of all the required files
-            dst = tempfile.mktemp(prefix="%s_%s" %(self.id ,self.fabfile_recipe.slug),
-                                  suffix=".tar.bz2",
-                                  dir=settings.BUILD_PATH)
+        dst = tempfile.mktemp(prefix="%s_%s" %(self.id ,self.fabfile_recipe.slug),
+                              suffix=".tar.bz2",
+                              dir=settings.BUILD_PATH)
+        try:
             out_tarfile = tarfile.TarFile.open(dst, mode="w:bz2")
             file = os.path.abspath(self.fabfile_recipe.file.path)
             
@@ -49,9 +52,11 @@ class Build(models.Model):
             info = tarfile.TarInfo(name='build_runner.py')
             info.size = len(build_runner)
             out_tarfile.addfile(info, StringIO(build_runner))
-            return os.path.basename(out_tarfile.name)
+            tarfile_name  = out_tarfile.name
+            return os.path.basename(tarfile_name)
         finally:
             out_tarfile.close()
+            
             
     def get_build_package_url(self):
         filename = self.make_build_package()

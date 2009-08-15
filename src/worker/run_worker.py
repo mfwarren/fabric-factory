@@ -2,14 +2,22 @@ import os
 import urllib2
 import simplejson
 import tarfile
+import time
+import logging
 
 from worker import settings
 from worker import Worker
+from worker import daemon
 
 def main():
     from optparse import OptionParser
     parser = OptionParser()
-    
+    parser.add_option("-a",
+                      "--action",
+                      dest="action",
+                      help="Action can be : start|stop|restart",
+                      default="start"
+                      )    
     parser.add_option("-k",
                       "--kitchen",
                       dest="kitchen",
@@ -35,19 +43,22 @@ def main():
                       default=settings.WORKER_KEEP_BUILDS
                       )
     (options, args) = parser.parse_args()
-    print options
-    worker = worker_factory(factory_url=options.factory_url,
-                   kitchen_path=options.kitchen)
-    if worker is not None:
-        worker.download_build_package()
-        worker.execute_task()
-        worker.post_result()
-        if not options.keep_builds:
-            worker.clean()
+    logging.debug('command line options : %s' %options)
+    pid_file = os.path.join(os.getcwd(),'worker_daemon.pid' )
+    worker_daemon = WorkerDaemon(pid_file)
+    if options.action == "start":
+        worker_daemon.start(options)
+    elif options.action == "stop":
+        worker_daemon.stop()
+    elif options.action == "restart":
+        worker_daemon.restart()
+    
+
 
 def worker_factory(factory_url, kitchen_path):
     response = urllib2.urlopen(factory_url, data=None)
     json = response.read()
+    logging.debug('json response from the factory server \n %s' %json)
     worker_dict = simplejson.loads(json)
     if worker_dict:
         worker = Worker(name=worker_dict['name'], task=worker_dict['task'],
@@ -57,6 +68,24 @@ def worker_factory(factory_url, kitchen_path):
         return worker
     else:
         return None
+    
+class WorkerDaemon(daemon.Daemon):
+    def run(self, options):
+        while True:
+            logging.debug("Worker search for a gig")
+            time.sleep(options.interval)
+            worker = worker_factory(factory_url=options.factory_url,
+                           kitchen_path=options.kitchen)
+            if worker is not None:
+                logging.debug("worker download the build package")
+                worker.download_build_package()
+                logging.debug("Worker execute the task")
+                worker.execute_task()
+                logging.debug("Worker post the result")
+                worker.post_result()
+                if not options.keep_builds:
+                    logging.debug("Worker clean the kitchen after the build")
+                    worker.clean()
 
 
 if __name__ == '__main__':
