@@ -1,0 +1,5 @@
+syntax: glob
+ve/*
+src/project/media/factory/fabfiles/*
+src/worker/kitchen/*
+src/project/media/build_package/*

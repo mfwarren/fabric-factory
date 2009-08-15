@@ -1,0 +1,10 @@
+{% extends "factory/base.html" %}
+
+{% block content %}
+<h1>Create a new build</h1>
+<form action="." method="POST">
+{{ form.as_p }}
+<input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

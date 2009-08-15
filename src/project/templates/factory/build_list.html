@@ -1,0 +1,12 @@
+{% extends "factory/base.html" %}
+
+{% block content %}
+<h1>{{ list_name }}</h1>
+<ul>
+{% for object in object_list %}
+    <li><a href="{% url factory.views.build_detail object_id=object.id %}">{{ object }}</a> -- <a href="{% url factory.views.build_update object_id=object.id %}">Update</a>
+    
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}

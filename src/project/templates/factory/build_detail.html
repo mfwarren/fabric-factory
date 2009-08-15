@@ -1,0 +1,15 @@
+{% extends "factory/base.html" %}
+
+{% block content %}
+<h1>{{ object }}</h1>
+<h2>Status</h2>
+<ul id="id">
+    <li>executed :{{ object.executed }}</li>
+    <li>success : {{ object.success }}</li>
+    <li><a href="{{ object.fabfile_recipe.file.url }}">fabfile</a></li>
+</ul>
+<h2>Runner</h2>
+<a href="{{ object.get_build_package_url }}">download</a>
+
+
+{% endblock %}
