@@ -2,14 +2,16 @@ import tarfile
 import bz2
 import tempfile
 import os
+import logging
 from cStringIO import StringIO
+
 
 
 from django.db import models
 from django.conf import settings
+from factory.storage import FileSystemStorageUuidName
 
 # Create your models here.
-
 class FabfileRecipe(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
@@ -38,20 +40,19 @@ class Build(models.Model):
         
         # Check if BUILD_PATH exist if it doesn't create it
         if not os.path.isdir(settings.BUILD_PATH):
+            logging.debug("Create the directory : %s" %settings.BUILD_PATH)
             os.mkdir(settings.BUILD_PATH)
         # Make a tar of all the required files
+        
         dst = tempfile.mktemp(prefix="%s_%s" %(self.id ,self.fabfile_recipe.slug),
                               suffix=".tar.bz2",
                               dir=settings.BUILD_PATH)
+        logging.debug("Created temporary directory called : %s" %dst)
         try:
             out_tarfile = tarfile.TarFile.open(dst, mode="w:bz2")
             file = os.path.abspath(self.fabfile_recipe.file.path)
             
             out_tarfile.add( file, arcname='fabfile.py' )
-            build_runner = "fab %s" %self.task
-            info = tarfile.TarInfo(name='build_runner.py')
-            info.size = len(build_runner)
-            out_tarfile.addfile(info, StringIO(build_runner))
             tarfile_name  = out_tarfile.name
             return os.path.basename(tarfile_name)
         finally:

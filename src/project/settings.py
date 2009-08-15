@@ -1,5 +1,6 @@
 # Django settings for prj project.
 import os
+import logging
 
 PROJECT_PATH = os.path.dirname(os.path.normpath(__file__))
 PROJECT_ROOT = os.path.normpath(PROJECT_PATH + '/..')
@@ -90,3 +91,31 @@ INSTALLED_APPS = (
     'factory',
     #"worker", # added only to be able to run the test suite
 )
+
+DEFAULT_FILE_STORAGE = 'factory.storage.FileSystemStorageUuidName'
+
+##################################################
+# logging
+#
+# Set the logging level to control the volume of emitted log messages.
+# Use logging.DEBUG to emit all log messages. To get progressively fewer
+# messages use logging.INFO, logging.WARNING, logging.ERROR, logging.CRITICAL
+#
+LOGGING_LEVEL = (logging.DEBUG if DEBUG else logging.WARNING)
+# Use this to change the filename and/or location of the logfile as needed.
+
+LOGGING_LOGFILE = 'factory.log'
+# You probably won't need to change the following default settings
+
+LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"
+LOGGING_DATEFMT = "%m-%d %H:%M:%S"
+ 
+# Uncomment this call to basicConfig code to enable logging.
+# (Some deployments will require advanced logging configuration.
+# In that case, substitute that logging setup code here instead.)
+
+logging.basicConfig(level=LOGGING_LEVEL,
+                    format=LOGGING_FORMAT,
+                    datefmt=LOGGING_DATEFMT,
+                    filename=LOGGING_LOGFILE,
+                    filemode="a")
