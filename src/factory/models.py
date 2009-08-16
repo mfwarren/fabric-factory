@@ -28,6 +28,7 @@ class Build(models.Model):
     success = models.BooleanField()
     environement = models.TextField(null=True, blank=True)
     output = models.TextField(null=True, blank=True)
+    error = models.TextField(null=True, blank=True)
     
     def __unicode__(self):
         return self.name

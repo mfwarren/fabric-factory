@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     
     'factory',
-    #"worker", # added only to be able to run the test suite
+    "worker", # added only to be able to run the test suite
 )
 
 DEFAULT_FILE_STORAGE = 'factory.storage.FileSystemStorageUuidName'
