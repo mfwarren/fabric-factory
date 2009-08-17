@@ -9,12 +9,12 @@ def bootstrap():
     Create a virtual env called ve and install pip
     """
     local('virtualenv ve')
-    local('. ve/bin/activate; easy_install pip')
     
 def install_requirements():
     """
-    Install the requirements described in the requirments.txt
+    Install pip and the requirements described in the requirments.txt
     """
+    local('. ve/bin/activate; easy_install pip')
     local('. ve/bin/activate; pip install -r requirements.txt')
     
 def project_linkage():
@@ -38,7 +38,10 @@ def quickstart():
     All in one command that runs bootstrap, install_requirements,
     project_linkage
     """
-    bootstrap()
+    if not os.path.exists("./ve"):
+        bootstrap()
+    else:
+        print "No need to create virtualenv, 've' already exists"
     install_requirements()
     project_linkage()
     
