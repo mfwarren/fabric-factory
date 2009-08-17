@@ -1,4 +1,4 @@
-import simplejson
+import json
 
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -78,7 +78,7 @@ def build_oldest_not_executed(self):
            "build_package_url":"http://%s%s" %(site.domain,
                                                oldest_build_not_executed.get_build_package_url())
         }
-        json = simplejson.dumps(d)
+        json_string = json.dumps(d)
     else:
-        json = simplejson.dumps(False)
-    return HttpResponse(json)
+        json_string = json.dumps(False)
+    return HttpResponse(json_string)

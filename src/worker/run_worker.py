@@ -1,6 +1,6 @@
 import os
 import urllib2
-import simplejson
+import json
 import tarfile
 import time
 import logging
@@ -70,9 +70,9 @@ def main():
 
 def worker_factory(factory_url, kitchen_path):
     response = urllib2.urlopen(factory_url, data=None)
-    json = response.read()
-    logging.debug('json response from the factory server \n %s' %json)
-    worker_dict = simplejson.loads(json)
+    json_sting = response.read()
+    logging.debug('json response from the factory server \n %s' %json_string)
+    worker_dict = json.loads(json_string)
     if worker_dict:
         worker = Worker(name=worker_dict['name'], task=worker_dict['task'],
                     post_back_url=worker_dict['post_back_url'],
