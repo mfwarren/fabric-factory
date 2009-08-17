@@ -22,15 +22,22 @@ def project_linkage():
     Add a link from site-package to factory, worker, project 
     """
     current_dir = os.getcwd()
-    python_version = "python2.6"
+    ve_lib = os.path.join(current_dir, 've', 'lib')
+    
+    python_version = os.listdir(ve_lib).pop()
     for target_dir in ["project", "worker", "factory"]:
-        local('ln -s %s %s' %
-              (
-                os.path.join(current_dir,"src", target_dir),
-               os.path.join(current_dir, "ve", "lib", python_version,
-                            "site-packages", target_dir)
-              )
-        )
+        if not os.path.islink(
+            os.path.join(current_dir, "ve", "lib", python_version,
+                                "site-packages", target_dir)):
+            local('ln -s %s %s' %
+                  (
+                    os.path.join(current_dir,"src", target_dir),
+                   os.path.join(current_dir, "ve", "lib", python_version,
+                                "site-packages", target_dir)
+                  )
+            )
+        else:
+            print 'link to %s already exists' %target_dir
 
 
 def quickstart():
