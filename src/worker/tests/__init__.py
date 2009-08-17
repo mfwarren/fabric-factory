@@ -1,25 +1,61 @@
+import os
 import urllib2
 
-from django.test.testcases import TestCase
 from django.core.urlresolvers import reverse
-
+from django.test.testcases import TestCase
 
 from factory.tests import create_fabfile_recipe, create_build
-
-from worker.run_worker import worker_factory
+from worker import WorkerError
+from worker import Worker
 from worker import settings
 
+def create_worker():
+    kitchen_path = settings.WORKER_KITCHEN
+    worker_dict = {u'task': u'hello_world',
+                   u'name': u'my build',
+                   u'build_package_url': u'http://example.com/site_media/build_packages/1_recipeotPIHY.tar.bz2',
+                   u'post_back_url': u'http://example.com/factory/build/update/1/'}
+    worker = Worker(name=worker_dict['name'], task=worker_dict['task'],
+                post_back_url=worker_dict['post_back_url'],
+                build_package_url=worker_dict['build_package_url'],
+                kitchen_path=kitchen_path)
+    return worker
 
 class WorkerTest(TestCase):
     def setUp(self):
         self.fabfile_recipe = create_fabfile_recipe(name="test recipe")
         self.build = create_build(fabfile_recipe=self.fabfile_recipe)
-    def test_worker_factory(self):
-        options = {
-            'factory_url': 'http://127.0.0.1:8000/factory/build/oldest_not_executed/',
-            'keep_builds': True, 'interval': 600,
-            'kitchen': '/home/yml/workdir/webdev/fabric_factory/ve/lib/python2.6/site-packages/worker/kitchen'}
+    def test_create_worker(self):
+        """
+        Test that I can build a Worker
+        """
+        worker = create_worker()
         
-        worker = worker_factory(factory_url=options['factory_url'],
-                   kitchen_path=options['kitchen'])
         
+    def test_worker_download_build_package_wrong_url(self):
+        worker = create_worker()
+        try:
+            worker.download_build_package()
+        except Exception, e:
+            self.assertEqual(True, isinstance(e, WorkerError))
+    
+class ExecuteTaskFromFabfile(TestCase):
+    def setUp(self):
+        self.fabfile_path = os.path.join(
+            os.path.dirname(os.path.normpath(__file__)),
+            "test_fabfile.py"
+        )
+        self.task = "hello_world"
+        self.wrong_task = "wrong task"
+        
+    def test_execute_task_from_fabfile(self):
+        result = Worker._execute_task_from_fabfile(self.fabfile_path, self.task)
+        self.assertEqual(result, "")
+        
+    # TODO this test fails because I do not know hos to collect output and error
+    # from Fabric
+    def test_execute_wrong_task_from_fabfile(self):
+        try:
+            result = Worker._execute_task_from_fabfile(self.fabfile_path, self.wrong_task)
+        except Exception, e:
+            self.assertEqual(True, isinstance(e, WorkerError))

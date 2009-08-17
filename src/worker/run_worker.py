@@ -73,6 +73,7 @@ def worker_factory(factory_url, kitchen_path):
     json_sting = response.read()
     logging.debug('json response from the factory server \n %s' %json_string)
     worker_dict = json.loads(json_string)
+   
     if worker_dict:
         worker = Worker(name=worker_dict['name'], task=worker_dict['task'],
                     post_back_url=worker_dict['post_back_url'],

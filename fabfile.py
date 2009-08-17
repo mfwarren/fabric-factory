@@ -1,5 +1,8 @@
-from fabric.api import local
 import os
+import shutil
+
+from fabric.api import local
+
 
 def bootstrap():
     """
@@ -38,3 +41,29 @@ def quickstart():
     bootstrap()
     install_requirements()
     project_linkage()
+    
+def clean_up():
+    """
+    Clean up the environment this command should be used carefully because it
+    deletes a lot of stuff:
+        * src/project/dev.db
+        * src/project/media/factory/fabfiles
+        * src/project/media/build_packages
+        * src/worker/kitchen
+    """
+    current_dir = os.getcwd()
+    file_for_deletion = (
+        os.path.join(current_dir,"src" , "project", "dev.db"),
+        os.path.join(current_dir,"src" , "project", "media", "factory", "fabfiles"),
+        os.path.join(current_dir,"src" , "project", "media", "build_packages"),
+        os.path.join(current_dir,"src" , "worker", "kitchen"),
+    )
+    for f in file_for_deletion:
+        try:
+            if os.path.isdir(f):
+                shutil.rmtree(f)
+            else:
+                os.remove(f)
+        except Exception, e:
+            print e
+    
