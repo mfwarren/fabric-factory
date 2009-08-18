@@ -59,7 +59,6 @@ class Worker(object):
                             "fabfile.py")
         file_path = os.path.join(self.kitchen_path, file)
         self.output, self.error = self._execute_task_from_fabfile(file_path, self.task)  # We should collect this output
-        import ipdb; ipdb.set_trace()
         if self.error:
             self.success = True
         else:

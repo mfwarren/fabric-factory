@@ -1,4 +1,5 @@
 syntax: glob
+src/project/media/build_packages/*
 ve/*
 src/project/media/factory/fabfiles/*
 src/worker/kitchen/*

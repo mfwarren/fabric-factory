@@ -70,7 +70,7 @@ def main():
 
 def worker_factory(factory_url, kitchen_path):
     response = urllib2.urlopen(factory_url, data=None)
-    json_sting = response.read()
+    json_string = response.read()
     logging.debug('json response from the factory server \n %s' %json_string)
     worker_dict = json.loads(json_string)
    
