@@ -53,10 +53,8 @@ class ExecuteTaskFromFabfile(TestCase):
         self.assertEqual(output, 'hello world\n')
         self.assertEqual(error, "")
         
-    # TODO this test fails because I do not know hos to collect output and error
-    # from Fabric
     def test_execute_wrong_task_from_fabfile(self):
         try:
-            result = Worker._execute_task_from_fabfile(self.fabfile_path, self.wrong_task)
+            output, error = Worker._execute_task_from_fabfile(self.fabfile_path, self.wrong_task)
         except Exception, e:
             self.assertEqual(True, isinstance(e, WorkerError))
