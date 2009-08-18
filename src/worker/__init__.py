@@ -1,9 +1,11 @@
 from glob import glob
 from imp import load_source
 from shutil import rmtree
+from StringIO import StringIO
 import logging
 import os
 import simplejson
+import sys
 import tarfile
 import urllib
 import urllib2
@@ -57,6 +59,7 @@ class Worker(object):
                             "fabfile.py")
         file_path = os.path.join(self.kitchen_path, file)
         self.output, self.error = self._execute_task_from_fabfile(file_path, self.task)  # We should collect this output
+        import ipdb; ipdb.set_trace()
         if self.error:
             self.success = True
         else:
@@ -88,14 +91,22 @@ class Worker(object):
                 rmtree(f)
     @staticmethod
     def _execute_task_from_fabfile(fabfile_path, task):
+
         fabfile = load_source("fabfile",
                     fabfile_path)
         if hasattr(fabfile, task):
             task = getattr(fabfile, task)
+            # capture sys.stdout and sys.stderr
+            # before executing the task
+            output = StringIO()
+            error = StringIO()
+            sys.stdout = output
+            sys.stderr = error
             # execute the task
-            output = task()  # We should collect this output
-            error = None # TODO : Find a way to collect the error
-            return (output, error)
+            task()
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            return (output.getvalue(), error.getvalue())
         else:
             raise WorkerError("No task %s in fabfile %s" %
                                             (task, fabfile_path))
