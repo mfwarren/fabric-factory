@@ -16,6 +16,9 @@ class FabfileRecipe(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     file = models.FileField(upload_to='factory/fabfiles')
+    
+    def __unicode__(self):
+        return self.name
 
     
 class Build(models.Model):
