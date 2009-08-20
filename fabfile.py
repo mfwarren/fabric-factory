@@ -52,6 +52,14 @@ def quickstart():
     install_requirements()
     project_linkage()
     
+def run_test_suite():
+    """
+    Run the test suite for the Fabric Factory
+    """
+    local('. ve/bin/activate; src/project/manage.py test')
+    
+ 
+    
 def clean_up():
     """
     Clean up the environment this command should be used carefully because it

@@ -58,3 +58,7 @@ class ExecuteTaskFromFabfile(TestCase):
             output, error = Worker._execute_task_from_fabfile(self.fabfile_path, self.wrong_task)
         except Exception, e:
             self.assertEqual(True, isinstance(e, WorkerError))
+            
+#class FaillingTest(TestCase):
+#    def test_faillure(self):
+#        self.assertEqual(True, False)
