@@ -121,6 +121,6 @@ logging.basicConfig(level=LOGGING_LEVEL,
                     filemode="a")
 
 try:
-    from project import local_settings
+    from project.local_settings import *
 except:
     pass

@@ -37,7 +37,7 @@ logging.basicConfig(level=LOGGING_LEVEL,
                     filemode="a")
 
 try:
-    from project import local_settings
+    from worker.local_settings import *
 except:
     pass
 
