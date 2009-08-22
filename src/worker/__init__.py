@@ -59,6 +59,8 @@ class Worker(object):
                             "fabfile.py")
         file_path = os.path.join(self.kitchen_path, file)
         self.output, self.error = self._execute_task_from_fabfile(file_path, self.task)  # We should collect this output
+        logging.debug('output : %s' %self.output)
+        logging.debug('error : %s' %self.error)
         if self.error:
             self.success = False
         else:
@@ -90,7 +92,6 @@ class Worker(object):
                 rmtree(f)
     @staticmethod
     def _execute_task_from_fabfile(fabfile_path, task):
-
         fabfile = load_source("fabfile",
                     fabfile_path)
         if hasattr(fabfile, task):

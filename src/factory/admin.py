@@ -5,7 +5,7 @@ class FabfileRecipeAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     
 class BuildAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'task', 'executed', 'success')
 
 admin.site.register(FabfileRecipe, FabfileRecipeAdmin)
 admin.site.register(Build, BuildAdmin)
