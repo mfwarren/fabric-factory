@@ -4,11 +4,11 @@ from shutil import rmtree
 from StringIO import StringIO
 import logging
 import os
-import simplejson
 import sys
 import tarfile
 import urllib
 import urllib2
+
 
 from worker import settings
 
