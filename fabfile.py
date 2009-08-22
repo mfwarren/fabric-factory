@@ -8,7 +8,7 @@ def bootstrap():
     """
     Create a virtual env called ve and install pip
     """
-    local('virtualenv ve')
+    local('virtualenv --no-site-packages ve')
     
 def install_requirements():
     """
@@ -58,7 +58,26 @@ def run_test_suite():
     """
     local('. ve/bin/activate; src/project/manage.py test')
     
- 
+def temp_clean_up():
+    """
+    Clean up the environment this command should be used carefully because it
+    deletes a lot of stuff:
+        * src/project/media/build_packages
+        * src/worker/kitchen
+    """
+    current_dir = os.getcwd()
+    file_for_deletion = (
+        os.path.join(current_dir,"src" , "project", "media", "build_packages"),
+        os.path.join(current_dir,"src" , "worker", "kitchen"),
+    )
+    for f in file_for_deletion:
+        try:
+            if os.path.isdir(f):
+                shutil.rmtree(f)
+            else:
+                os.remove(f)
+        except Exception, e:
+            print e
     
 def clean_up():
     """
