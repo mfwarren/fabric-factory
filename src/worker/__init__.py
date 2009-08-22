@@ -60,14 +60,14 @@ class Worker(object):
         file_path = os.path.join(self.kitchen_path, file)
         self.output, self.error = self._execute_task_from_fabfile(file_path, self.task)  # We should collect this output
         if self.error:
-            self.success = True
-        else:
             self.success = False
+        else:
+            self.success = True
             
     def post_result(self):
         values = {
-            "name":'test',
-            "task": 'my_task',
+            "name": self.name,
+            "task": self.task,
             'revision': '',
             'executed':'on',
             'environment':'',
@@ -102,11 +102,14 @@ class Worker(object):
             sys.stdout = output
             sys.stderr = error
             # execute the task
-            task()
-            sys.stdout = sys.__stdout__
-            sys.stderr = sys.__stderr__
+            try:
+                task()
+            except SystemExit, e:
+                logging.error("%s %s" %(e.__class__(), str(e)))
+            finally:
+                sys.stdout = sys.__stdout__
+                sys.stderr = sys.__stderr__
             return (output.getvalue(), error.getvalue())
         else:
             raise WorkerError("No task %s in fabfile %s" %
-                                            (task, fabfile_path))
-    
+                                            (task, fabfile_path))    

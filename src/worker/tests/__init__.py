@@ -50,7 +50,7 @@ class ExecuteTaskFromFabfile(TestCase):
         
     def test_execute_task_from_fabfile(self):
         output, error = Worker._execute_task_from_fabfile(self.fabfile_path, self.task)
-        self.assertEqual(output, 'hello world\n')
+        self.assertEqual(output, 'hello world\n[localhost] run: ls -l\n')
         self.assertEqual(error, "")
         
     def test_execute_wrong_task_from_fabfile(self):
