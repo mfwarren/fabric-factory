@@ -35,3 +35,9 @@ logging.basicConfig(level=LOGGING_LEVEL,
                     datefmt=LOGGING_DATEFMT,
                     filename=LOGGING_LOGFILE,
                     filemode="a")
+
+try:
+    from project import local_settings
+except:
+    pass
+
