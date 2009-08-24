@@ -92,10 +92,14 @@ class Worker(object):
                 rmtree(f)
     @staticmethod
     def _execute_task_from_fabfile(fabfile_path, task):
+        
         fabfile = load_source("fabfile",
                     fabfile_path)
+        logging.debug("fabfile_path : %s" %fabfile_path)
         if hasattr(fabfile, task):
             task = getattr(fabfile, task)
+            cwd = os.getcwd()
+            os.chdir(os.path.dirname(fabfile_path))
             # capture sys.stdout and sys.stderr
             # before executing the task
             output = StringIO()
@@ -110,6 +114,7 @@ class Worker(object):
             finally:
                 sys.stdout = sys.__stdout__
                 sys.stderr = sys.__stderr__
+                os.chdir(cwd)
             return (output.getvalue(), error.getvalue())
         else:
             raise WorkerError("No task %s in fabfile %s" %

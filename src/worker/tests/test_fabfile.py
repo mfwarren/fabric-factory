@@ -3,7 +3,10 @@ import shutil
 
 from fabric.api import local
 
-
+def hello_world():
+    print "hello world"
+    local("ls -l")
+    
 def bootstrap():
     """
     Create a virtual env called ve and install pip

@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 from fabric.api import local
 
@@ -8,14 +9,14 @@ def bootstrap():
     """
     Create a virtual env called ve and install pip
     """
-    local('virtualenv fabric_factory/ve')
+    local('virtualenv --no-site-packages fabric_factory/ve')
     
 def install_requirements():
     """
     Install pip and the requirements described in the requirments.txt
     """
-    local('. fabric_factory/ve/bin/activate; easy_install pip')
-    local('. fabric_factory/ve/bin/activate; pip install -r requirements.txt')
+    local('. fabric_factory/ve/bin/activate; python fabric_factory/ve/bin/easy_install pip')
+    local('. fabric_factory/ve/bin/activate; python fabric_factory/ve/bin/pip install -r fabric_factory/requirements.txt')
     
 def project_linkage():
     """
@@ -62,8 +63,11 @@ def run_test_suite():
     """
     Run the test suite for the Fabric Factory
     """
-    local('. fabric_factory/ve/bin/activate; fabric_factory/src/project/manage.py test')
-    
+    local('./fabric_factory/ve/bin/python fabric_factory/src/project/manage.py test --settings=project.settings')
+    #subprocess.call(['./fabric_factory/ve/bin/python',
+    #                 'fabric_factory/src/project/manage.py',
+    #                 'test',
+    #                 '--settings=project.settings'])
 def download_setup_and_test():
     """
     This command combine 3 commands :
@@ -74,5 +78,6 @@ def download_setup_and_test():
     download_fabric_factory()
     quickstart()
     run_test_suite()
+    print "end"
     
  

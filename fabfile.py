@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 
 from fabric.api import local
 
@@ -56,7 +57,11 @@ def run_test_suite():
     """
     Run the test suite for the Fabric Factory
     """
-    local('. ve/bin/activate; src/project/manage.py test')
+    local('. ve/bin/activate; src/project/manage.py test --settings=project.settings')
+    #subprocess.call(['./ve/bin/python',
+    #                 'src/project/manage.py',
+    #                 'test',
+    #                 '--settings=project.settings'])
     
 def temp_clean_up():
     """
