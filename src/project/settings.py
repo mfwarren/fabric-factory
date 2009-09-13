@@ -19,7 +19,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'dev.db'             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(PROJECT_PATH, 'dev.db')             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -103,8 +103,7 @@ DEFAULT_FILE_STORAGE = 'factory.storage.FileSystemStorageUuidName'
 #
 LOGGING_LEVEL = (logging.DEBUG if DEBUG else logging.WARNING)
 # Use this to change the filename and/or location of the logfile as needed.
-
-LOGGING_LOGFILE = 'factory.log'
+LOGGING_LOGFILE = os.path.join(PROJECT_PATH, 'factory.log')
 # You probably won't need to change the following default settings
 
 LOGGING_FORMAT = "%(asctime)s [%(levelname)s] %(message)s"

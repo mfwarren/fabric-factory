@@ -1,3 +1,2 @@
-ipdb
 -e git://github.com/bitprophet/fabric.git#egg=fabric
 -e svn+http://code.djangoproject.com/svn/django/trunk#egg=django
