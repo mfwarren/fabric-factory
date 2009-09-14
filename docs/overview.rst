@@ -24,8 +24,8 @@ You can download the code using mercurial:
 
   * pip install -e git://github.com/bitprophet/fabric.git#egg=Fabric
   
-  Usage
-  ======
+Usage
+======
   
 "quickstart" has created a virtual env which must be actived before you run any of the following command.
   * . ve/bin/activate
@@ -44,10 +44,10 @@ Once the server is started and that you have created some "Build" in django's ad
   * python run_worker.py --daemon=start
   * python run_worker.py --daemon=stop
   
-  Use case
-  =========
+Use case
+=========
   
-  Now that you have understood the layout of the project. Let us see how achieve something useful with it.
+Now that you have understood the layout of the project. Let us see how achieve something useful with it.
   
 We are going to create a Build that will :
     * download the Fabric Factory 
@@ -57,7 +57,8 @@ We are going to create a Build that will :
     
  1> Direct your browser to that url http://127.0.0.1:8000/admin/ and key in the username/password you have chosen for your administrator.
  2> Add the fabfile recipe store in docs http://127.0.0.1:8000/admin/factory/fabfilerecipe/add/ and call it "fabric factory use case"
- 3> Create a Build that will download setup and run the test here : http://127.0.0.1:8000/admin/factory/build/add/
+ 3> Replace example.com by 127.0.0.1:8000 in sites : http://127.0.0.1:8000/admin/sites/site/1/
+ 4> Create a Build that will download setup and run the test here : http://127.0.0.1:8000/admin/factory/build/add/
  
 The fabfile recipe that we have download earlier contains a task called : 'download_setup_and_test' This task as been writen to do what we want.
  
@@ -66,7 +67,15 @@ We are now going to configure the client to run this task. However before doing 
  """
  {"task": "download_setup_and_test", "name": "download setup and run the test", "build_package_url": "http://127.0.0.1:8000/site_media/build_packages/1_fabric-factory-use-case4fIWt6.tar.bz2", "post_back_url": "http://127.0.0.1:8000/factory/build/update/1/"}
  """
- 
+5> Open a new terminal and move into the the worker directory then you can start the worker in daemon mode :
+  * . ve/bin/activate
+  * cd src/worker
+  * python run_worker.py --daemon=start
+  
+If you want to look at what is happening in the background you can watch at the log file in realtime
+  * tail -f worker.log
+6> You can see the status of the build here : http://127.0.0.1:8000/admin/factory/build/ Keep in mind this task is pretty long to run because we are downloading all the dependancies (django, fabric). It took me almost 5 minutes to execute this task and to see the result in the admin. 
+
 
 Conclusion
 ===========
