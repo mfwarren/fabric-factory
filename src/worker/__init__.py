@@ -35,10 +35,14 @@ class Worker(object):
         self.output = None
         self.error = None
     def download_build_package(self):
+        logging.debug("try to download the build package : %s" %
+                      self.build_package_url)
         if not os.path.isdir(self.kitchen_path):
             os.mkdir(self.kitchen_path)
         try:
             web_file = urllib2.urlopen(self.build_package_url)
+            logging.debug("Build package successfully downloaded: %s" %
+                      self.build_package_url)
         except Exception, e:
             raise WorkerError("Cannot download the package to build : %s" %
                         self.build_package_url)
@@ -54,18 +58,23 @@ class Worker(object):
 
     def execute_task(self):
         #a bit of hackery there to import this particular fabfile
+        logging.debug("Worker try to execute the task : %s" %
+                      self.task)
         file = os.path.join(self.kitchen_path,
                             self.filename.split('.')[0],
                             "fabfile.py")
         file_path = os.path.join(self.kitchen_path, file)
-        self.output, self.error = self._execute_task_from_fabfile(file_path, self.task)  # We should collect this output
+        # We should collect this output
+        self.output, self.error = self._execute_task_from_fabfile(file_path,
+                                                                  self.task) 
         logging.debug('output : %s' %self.output)
         logging.debug('error : %s' %self.error)
         if self.error:
             self.success = False
+            logging.debug("Fail to execute the task")
         else:
             self.success = True
-            
+            logging.debug("Succeed to execute the task")
     def post_result(self):
         values = {
             "name": self.name,
@@ -78,12 +87,14 @@ class Worker(object):
         }
         if self.success:
             values['success'] = 'on'
+        logging.debug("Post the values : %s" %values)
         data = urllib.urlencode(values)
         request = urllib2.Request(self.post_back_url, data)
         fd=urllib2.urlopen(request)
         data=fd.read()
         
     def clean(self):
+        logging.debug('Clean the kitchen')
         for f in glob(os.path.join(self.kitchen_path,
                                         self.filename.split('.')[0]+"*")):
             if os.path.isfile(f):

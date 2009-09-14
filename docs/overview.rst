@@ -42,27 +42,31 @@ The main app of this django project called fabric factory is called "factory".
 Once the server is started and that you have created some "Build" in django's admin interface you can open a new terminal and run the client side of the project:
 
   * cd src/worker
-  * python run_worker.py
+  * python run_worker.py --daemon=start
+  * python run_worker.py --daemon=stop
   
   Use case
   =========
   
-  Now that you have understood the layout of the project I am let us write a achieve something useful with it. We are going to create a Build that will :
+  Now that you have understood the layout of the project. Let us see how achieve something useful with it.
+  
+We are going to create a Build that will :
     * download the Fabric Factory 
     * setup the environement
     * run the test suite
     * Report the result
     
- 1> Direct your browser to that url http://192.168.1.11:8000/admin/ and key in the username/password you have chosen for your administrator.
- 2> Add this [Add link] fabfile recipe http://192.168.1.11:8000/admin/factory/fabfilerecipe/add/ and call it "fabric factory use case"
- 3> Create a Build that will download setup and run the test here http://192.168.1.11:8000/admin/factory/build/add/
+ 1> Direct your browser to that url http://127.0.0.1:8000/admin/ and key in the username/password you have chosen for your administrator.
+ 2> Add the fabfile recipe store in docs http://127.0.0.1:8000/admin/factory/fabfilerecipe/add/ and call it "fabric factory use case"
+ 3> Create a Build that will download setup and run the test here : http://127.0.0.1:8000/admin/factory/build/add/
  
- Note : This is all you will need to do once your client/server will be setup to create a new build. We are now going to configure the client to run the tasks of this server. First let see how the server publish the next task that need to be executed. Point your browser to this url : http://192.168.1.11:8000/factory/build/oldest_not_executed/ You can see here a json string describing the task.
+The fabfile recipe that we have download earlier contains a task called : 'download_setup_and_test' This task as been writen to do what we want.
+ 
+We are now going to configure the client to run this task. However before doing this let us see how the server publish the tasks that need to be executed. Point your browser to this url : http://127.0.0.1:8000/factory/build/oldest_not_executed/ You can see here a json string describing the task.
  
  """
  {"task": "download_setup_and_test", "name": "download setup and run the test", "build_package_url": "http://192.168.1.11:8000/site_media/build_packages/1_fabric-factory-use-case4fIWt6.tar.bz2", "post_back_url": "http://192.168.1.11:8000/factory/build/update/1/"}
  """
-  
   
 
 Conclusion

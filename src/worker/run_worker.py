@@ -12,8 +12,8 @@ from worker import daemon
 def main():
     from optparse import OptionParser
     parser = OptionParser()
-    parser.add_option("-a",
-                      "--action",
+    parser.add_option("-d",
+                      "--daemon",
                       dest="action",
                       help="Action can be : start|stop|restart",
                       default=""
@@ -56,14 +56,10 @@ def main():
         worker = worker_factory(factory_url=options.factory_url,
                        kitchen_path=options.kitchen)
         if worker is not None:
-            logging.debug("worker download the build package")
             worker.download_build_package()
-            logging.debug("Worker execute the task")
             worker.execute_task()
-            logging.debug("Worker post the result")
             worker.post_result()
             if not options.keep_builds:
-                logging.debug("Worker clean the kitchen after the build")
                 worker.clean()
     
 
