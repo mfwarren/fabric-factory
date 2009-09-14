@@ -3,18 +3,17 @@ Fabric factory
 
 This is a project I have been working on recently after I spent a day to look at the existing solution to run periodically a test suite. Most of the project I look at were either difficult to setup or require to learn yet another specific domain specific language or had dependency on a larger software stack.
 
-As a reaction to this situation I have decided to see if I could write something simple that achieve gracefully the task above and is easy to setup.  
+As a reaction to this situation I have decided to see if I could write something simple that achieve gracefully the task above. I also try to make it as easy to setup as possible.  
 
 In order to achieve this I have decided to use cpython as platform, django as web framework for the server and Fabric as library to automate the task execution.
 
-The result of this mix can be found is called Fabric Factory (http://bitbucket.org/yml/fabric_factory/) this will eventually become a complete Job Server that could be used to distribute any kind of task scripted in Fabric.
+The result of this mix can be found on bitbucket in a project called Fabric Factory (http://bitbucket.org/yml/fabric_factory/). This will eventually become a complete Job Server that could be used to distribute any kind of task scripted in Fabric.
 
-This post will show you how to setup the project and how a client can pull the list of "Build" that need to be executed.
 
 Installation
 =============
 
-This assumes that django is installed on your computer and that it is in your PYTHONPATH. If it is not the case you can install it easily at the end of this step by doing "pip install django" with in the virtual env created for fabric_factory.
+This assumes that python is installed on your computer and that you have an internet conection.
 
 You can download the code using mercurial:
    * hg clone http://bitbucket.org/yml/fabric_factory/
@@ -28,10 +27,10 @@ You can download the code using mercurial:
   Usage
   ======
   
-"quickstart" should have created a virtual env which should be active before you run any of the following command.
+"quickstart" has created a virtual env which must be actived before you run any of the following command.
   * . ve/bin/activate
     
-Once the virtualenv is activated you could go inside "src/project". This is a django project so from there you can do several things :
+Once the virtualenv is activated you can go inside "src/project". This is a django project so from there you can do several things :
 
   * create an sqlite db :  python manage.py syncdb
   * run the server : python manage.py runserver
@@ -65,9 +64,9 @@ The fabfile recipe that we have download earlier contains a task called : 'downl
 We are now going to configure the client to run this task. However before doing this let us see how the server publish the tasks that need to be executed. Point your browser to this url : http://127.0.0.1:8000/factory/build/oldest_not_executed/ You can see here a json string describing the task.
  
  """
- {"task": "download_setup_and_test", "name": "download setup and run the test", "build_package_url": "http://192.168.1.11:8000/site_media/build_packages/1_fabric-factory-use-case4fIWt6.tar.bz2", "post_back_url": "http://192.168.1.11:8000/factory/build/update/1/"}
+ {"task": "download_setup_and_test", "name": "download setup and run the test", "build_package_url": "http://127.0.0.1:8000/site_media/build_packages/1_fabric-factory-use-case4fIWt6.tar.bz2", "post_back_url": "http://127.0.0.1:8000/factory/build/update/1/"}
  """
-  
+ 
 
 Conclusion
 ===========
