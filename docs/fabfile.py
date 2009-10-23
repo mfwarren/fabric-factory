@@ -18,27 +18,12 @@ def install_requirements():
     local('. fabric_factory_sandbox/ve/bin/activate; easy_install pip')
     local('. fabric_factory_sandbox/ve/bin/activate; pip install -r fabric_factory_sandbox/fabric_factory/requirements.txt')
     
-def project_linkage():
+def install_fabric_factory():
     """
     Add a link from site-package to factory, worker, project 
     """
-    current_dir = os.getcwd()
-    ve_lib = os.path.join(current_dir, 'fabric_factory_sandbox', 've', 'lib')
+    local('. fabric_factory_sandbox/ve/bin/activate; python setup.py develop')
     
-    python_version = os.listdir(ve_lib).pop()
-    for target_dir in ["project", "worker", "factory"]:
-        if not os.path.islink(
-            os.path.join(ve_lib, python_version,
-                                "site-packages", target_dir)):
-            local('ln -s %s %s' %
-                  (
-                    os.path.join(current_dir,"fabric_factory_sandbox", "fabric_factory", "src", target_dir),
-                   os.path.join(ve_lib, python_version,
-                                "site-packages", target_dir)
-                  )
-            )
-        else:
-            print 'link to %s already exists' %target_dir
 
 def download_fabric_factory():
     """
@@ -58,7 +43,7 @@ def quickstart():
         print "No need to create virtualenv, 've' already exists"
     download_fabric_factory()
     install_requirements()
-    project_linkage()
+    install_fabric_factory()
     
 def run_test_suite():
     """
@@ -73,8 +58,10 @@ def download_setup_and_test():
       * quickstart
       * run_test_suite
     """
-    print 'start'
+    print 'starting ...'
+    print 'Installing the requirements and fabric_factory'
     quickstart()
+    print 'Running the test suite for fabric_factory' 
     run_test_suite()
     print "end"
     
