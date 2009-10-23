@@ -4,6 +4,7 @@ import subprocess
 
 from fabric.api import local
 
+ve_bin = 'fabric_factory_sandbox/ve/bin'
 
 def bootstrap():
     """
@@ -15,14 +16,16 @@ def install_requirements():
     """
     Install pip and the requirements described in the requirments.txt
     """
-    local('. fabric_factory_sandbox/ve/bin/activate; easy_install pip')
-    local('. fabric_factory_sandbox/ve/bin/activate; pip install -r fabric_factory_sandbox/fabric_factory/requirements.txt')
+    local('%(ve_bin)s/python %(ve_bin)s/easy_install pip'
+          %{'ve_bin':ve_bin})
+    local('cd fabric_factory_sandbox/fabric_factory; ../../fabric_factory_sandbox/ve/bin/python ../../fabric_factory_sandbox/ve/bin/pip install -r requirements.txt' %{'ve_bin':ve_bin})
     
 def install_fabric_factory():
     """
     Add a link from site-package to factory, worker, project 
     """
-    local('. fabric_factory_sandbox/ve/bin/activate; python fabric_factory_sandbox/fabric_factory/setup.py develop')
+    local('cd fabric_factory_sandbox/fabric_factory; ../../%(ve_bin)s/python setup.py develop'
+          %{'ve_bin':ve_bin})
     
 
 def download_fabric_factory():
@@ -49,7 +52,7 @@ def run_test_suite():
     """
     Run the test suite for the Fabric Factory
     """
-    local('. fabric_factory_sandbox/ve/bin/activate; python fabric_factory_sandbox/fabric_factory/src/project/manage.py test --settings=project.settings')
+    local('%(ve_bin)s/python fabric_factory_sandbox/fabric_factory/src/project/manage.py test --settings=project.settings' %{'ve_bin':ve_bin})
 
 def download_setup_and_test():
     """
