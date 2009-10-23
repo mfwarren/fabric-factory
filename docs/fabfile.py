@@ -22,7 +22,7 @@ def install_fabric_factory():
     """
     Add a link from site-package to factory, worker, project 
     """
-    local('. fabric_factory_sandbox/ve/bin/activate; python setup.py develop')
+    local('. fabric_factory_sandbox/ve/bin/activate; python fabric_factory_sandbox/fabric_factory/setup.py develop')
     
 
 def download_fabric_factory():
