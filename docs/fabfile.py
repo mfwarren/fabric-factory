@@ -52,7 +52,7 @@ def run_test_suite():
     """
     Run the test suite for the Fabric Factory
     """
-    local('%(ve_bin)s/python fabric_factory_sandbox/fabric_factory/src/project/manage.py test --settings=project.settings' %{'ve_bin':ve_bin})
+    print local('%(ve_bin)s/python fabric_factory_sandbox/fabric_factory/src/project/manage.py test --settings=project.settings' %{'ve_bin':ve_bin})
 
 def download_setup_and_test():
     """
